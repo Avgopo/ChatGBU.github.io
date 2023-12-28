@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGBU</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="card2">
+        <div class"Name">
+        <table class="table, th, td"></tableclass>
+        <div class="tr">
+            <div class"tr">
+            <tr>
+              <td>Criteria</td>
+              <td>Description</td>
+            </tr></div>
+            <tr>
+                <td contenteditable="false">Relevance to the theme</td>
+                <td contenteditable="true">...</td>
+            </tr>
+            <tr>
+                <td contenteditable="false">Comprehensiveness</td>
+                <td contenteditable="true">...</td>
+            </tr>
+            <tr>
+                <td contenteditable="false">Originality</td>
+                <td contenteditable="true">...</td>
+            </tr>
+            <tr>
+                <td contenteditable="false">Insights</td>
+                <td contenteditable="true">...</td>
+            </tr>
+          </table>
+    </div>    
+      <div class="card">
+        <div class="intro-msg">
+            <h1>ChatGBU</h1>
+            <p>Here to help anytime</p>
+        </div>
+        <div class="chat-container">
+            <div id="chat_response" class="chat_response">
+                
+            </div>
+        </div>
+
+        <form id="textform">
+            <input type="text" placeholder="Type here..." name="user_input" id="user_input" class="input-box" autocomplete="off">
+            <input type="submit" value="Send" class="submit-button">
+        </form>
+    </div>
+
+    <script>
+        const chat_response= document.getElementById("chat_response");
+        const user_chat = document.getElementById("user_chat");
+        const user_input = document.getElementById("user_input");
+
+        function adduserchat(content){
+            const contentElement = document.createElement("p");
+            contentElement.className = "user_chat";
+            contentElement.innerHTML = "<strong>User:</strong> " + content;
+            return contentElement;
+        }
+
+        function addaichat(content) {
+            const contentElement = document.createElement("p");
+            contentElement.className = "ai_response";
+            if (content.startsWith("1.") || content.startsWith("1)")) {
+            const listItems = content.split(/\d+\./g).filter(item => item.trim() !== '');
+            const orderedList = document.createElement("ol");
+            listItems.forEach(item => {
+                const listItem = document.createElement("li");
+                listItem.innerText = item.trim();
+                orderedList.appendChild(listItem);
+            });
+            contentElement.appendChild(orderedList);
+            } 
+
+            else if (content.startsWith("-")) {
+            const listItems = content.split("-");
+            const unorderedList = document.createElement("ul");
+            listItems.forEach(item => {
+                if (item.trim() !== '') {
+                    const listItem = document.createElement("li");
+                    listItem.innerText = item.trim();
+                    unorderedList.appendChild(listItem);
+                }
+            });
+            contentElement.appendChild(unorderedList);
+            } 
+
+            else {
+                contentElement.innerHTML = "<strong>Companion:</strong> " + content;
+            }
+
+            return contentElement;
+        }
+
+        document.getElementById('textform').addEventListener("submit", function(event){
+            event.preventDefault();
+            const user_input_value = user_input.value;
+            chat_response.appendChild(adduserchat(user_input_value))
+            user_input.value ="";
+
+            fetch("/chatbot", {
+                method: "POST",
+                body: JSON.stringify({user_input_value}),
+                headers: {"Content-type": "application/json; charset=UTF-8"}
+            })
+            .then(response => response.json())
+            .then(data => {
+                chat_response.appendChild(addaichat(data));
+                
+
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="title">
+        <h1>Welcome to ChatGBU!</h1>
+        <h2>Your Grading Based Utility.</h2>
+    </div>
+    <form method="GET" action="{{url_for('chatbot')}}" class="button-div">
+        <button>Get Started</button>
+    </form>
+    <div class="anchor-tag">
+        <a href="{{url_for('contacts')}}">Grades</a>
+    </div>
+</body>
+</html>
